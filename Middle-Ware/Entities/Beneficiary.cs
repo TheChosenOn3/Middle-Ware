@@ -35,6 +35,7 @@ namespace Entities
             set { myVar = value; }
         }
 
+      
 
 
 
