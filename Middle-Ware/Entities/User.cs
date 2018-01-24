@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MongoDB.Driver;
+using MongoDB.Bson.IO;
+using MongoDB.Bson;
 
 namespace Entities
 {
     public class User
     {
+        public ObjectId Id { get; set; }
         private string name;
 
         public string Name

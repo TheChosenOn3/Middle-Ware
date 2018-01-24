@@ -19,7 +19,8 @@ namespace Middle_Ware.Controllers
         }
 
         // GET api/<controller>/5
-        public string Get(int id)
+        [Route("api/Beneficiary/{user}/{pass}")]
+        public string Get(string user, string pass)
         {
             return "value";
         }

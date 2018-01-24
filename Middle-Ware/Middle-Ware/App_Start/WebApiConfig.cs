@@ -13,8 +13,8 @@ namespace Middle_Ware
             // Web API configuration and services
             var formatters = GlobalConfiguration.Configuration.Formatters;
             formatters.Remove(formatters.XmlFormatter);//removes XML FORMATTING AND ENFORCES US TO USE JSON
-            // Web API routes
-            config.MapHttpAttributeRoutes();
+                                                       // Web API routes
+        
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
