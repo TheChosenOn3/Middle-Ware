@@ -7,6 +7,7 @@ using System.Web.Http;
 using Entities;
 using Newtonsoft.Json;
 using ConnectionHandler;
+using System.Linq.Expressions;
 
 namespace Middle_Ware.Controllers
 {
@@ -19,22 +20,30 @@ namespace Middle_Ware.Controllers
         }
 
         // GET: api/User/5
-        public User Get(string id)
+        [Route("api/User/{user}/{pass}")]
+        [HttpGet]
+        public User Get(string user, string pass)
         {
-            User us =(User)JsonConvert.DeserializeObject(id);
-          List<User> userList =  DatabaseHandler<User>.getFilteredObj(us, c => c.Email, c => c.Email);
-            if (userList.Count==1)
+            User toPass = new Entities.User { Email = user, Password = pass };
+            Dictionary<Expression<Func<User, object>>, Func<User, object>> Filters = new Dictionary<Expression<Func<User, object>>, Func<User, object>>();
+            Filters.Add(c => c.Email, c => c.Email);
+            Filters.Add(c => c.Password, c => c.Password);
+            List<User> us = DatabaseHandler<User>.getDocumentContent(toPass,Filters);
+            if (us.Count==1)
             {
-                return userList[0];
+                return us[0];
+
             }
             return new User();
-
-          
         }
 
         // POST: api/User
-        public void Post([FromBody]string value)
+        public HttpResponseMessage Post([FromBody]string User)
         {
+           
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+
         }
 
         // PUT: api/User/5

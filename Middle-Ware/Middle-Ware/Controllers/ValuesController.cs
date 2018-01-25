@@ -29,22 +29,22 @@ namespace Middle_Ware.Controllers
         {
            
         }
-        [Route("api/Values/{user}/{pass}")]
-        public void Get(string user, string pass)
-        {
-            List<User> userList = DatabaseHandler<User>.getFilteredObj(new User(), c => c.Email, c => c.Email);
-            if (userList.Count == 1)
-            {
-                HttpResponseMessage response = Request.CreateResponse<User>(HttpStatusCode.BadRequest, userList[0]);
-                // return response;
-            }
-            else
-            {
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "Error message"); //return response; 
-            }
+        //[Route("api/Values/{user}/{pass}")]
+        //public void Get(string user, string pass)
+        //{
+        //    List<User> userList = DatabaseHandler<User>.getFilteredObj(new User(), c => c.Email, c => c.Email);
+        //    if (userList.Count == 1)
+        //    {
+        //        HttpResponseMessage response = Request.CreateResponse<User>(HttpStatusCode.BadRequest, userList[0]);
+        //        // return response;
+        //    }
+        //    else
+        //    {
+        //        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "Error message"); //return response; 
+        //    }
 
 
-        }
+        //}
         // PUT api/values/5
         public void Put(int id, [FromBody]string value)
         {

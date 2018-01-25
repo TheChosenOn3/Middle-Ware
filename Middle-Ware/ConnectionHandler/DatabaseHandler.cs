@@ -38,7 +38,8 @@ namespace ConnectionHandler
         /// <param name="property"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        public static List<T> getFilteredObj(T obj, Expression<Func<T, object>> property, Func<T, object> func)
+        /// Expression<Func<T, object>> property, Func<T, object> func
+        public static List<T> getDocumentContent(T obj, Dictionary<Expression<Func<T, object>>, Func<T, object>> Filters)
         {
             MongoClient client = new MongoClient();
             IMongoDatabase db = client.GetDatabase(DatabaseName);
@@ -46,12 +47,31 @@ namespace ConnectionHandler
             int indexCounter = collectionName.IndexOf('.');
             string ClassValue = collectionName.Substring(indexCounter + 1, collectionName.Length - indexCounter - 1);
             var col = db.GetCollection<T>(ClassValue);
-            var propertyValue = func(obj);
             var builder = Builders<T>.Filter;
-            var field = (property.Body as MemberExpression).Member.Name;
-            var query = builder.Eq(field, propertyValue);
+            FilterDefinition<T> query=null;
+            int counter = 0;
+            foreach (KeyValuePair<Expression<Func<T, object>>, Func<T, object>> item in Filters)
+            {
+                var propertyValue = item.Value(obj);
+
+                var field = (item.Key.Body as MemberExpression).Member.Name;
+                query = (counter == 0) ? builder.Eq(field, propertyValue):query & builder.Eq(field, propertyValue);
+                counter++;
+            }
+           
             List<T> returnList = (List<T>)col.Find(query).ToListAsync().Result;
             return returnList;
+        }
+
+        public static void insertData(T obj)
+        {
+            MongoClient client = new MongoClient();
+            IMongoDatabase db = client.GetDatabase(DatabaseName);
+            string collectionName = Convert.ToString(obj.GetType());
+            int indexCounter = collectionName.IndexOf('.');
+            string ClassValue = collectionName.Substring(indexCounter + 1, collectionName.Length - indexCounter - 1);
+            var col = db.GetCollection<T>(ClassValue);
+            col.InsertOne(obj);
         }
 
     }
