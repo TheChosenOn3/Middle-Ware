@@ -39,9 +39,9 @@ namespace Middle_Ware.Controllers
         }
 
         // POST: api/User
-        public HttpResponseMessage Post([FromBody]string User)
+        public HttpResponseMessage Post([FromBody]User user)
         {
-           
+            DatabaseHandler<User>.insertData(user);
 
             return new HttpResponseMessage(HttpStatusCode.OK);
 
