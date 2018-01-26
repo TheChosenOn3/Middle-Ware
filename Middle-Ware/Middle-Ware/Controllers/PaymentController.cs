@@ -13,6 +13,40 @@ namespace Middle_Ware.Controllers
 {
     public class PaymentController : ApiController
     {
+       
+        [HttpGet]
+        public IEnumerable<Payment> Get(string user)
+        {
+            Payment pay = new Payment{UserID=user};
+            List<Payment> payList = new List<Payment>();
+            Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>> Filters = new Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>>();
+            Filters.Add(c => c.UserID, c => c.UserID);
+            payList= DatabaseHandler<Payment>.getDocumentContent(pay, Filters);
+            if (payList.Count == 1)
+            {
+                return payList;
+
+            }
+            return payList;
+        }
+
+        public HttpResponseMessage Post([FromBody]Payment pay)
+        {
+            try
+            {
+                DatabaseHandler<Payment>.insertData(pay);
+            }
+            catch (Exception)
+            {
+
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+            return new HttpResponseMessage(HttpStatusCode.OK);
+
+
+
+        }
+
         private void checkPayments()
         {
             DateTime currentDate = DateTime.Now;
