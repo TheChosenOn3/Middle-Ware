@@ -24,6 +24,7 @@ namespace Middle_Ware.Controllers
         [HttpGet]
         public User Get(string user, string pass)
         {
+            
             User toPass = new Entities.User { Email = user, Password = pass };
             Dictionary<Expression<Func<User, object>>, Func<User, object>> Filters = new Dictionary<Expression<Func<User, object>>, Func<User, object>>();
             Filters.Add(c => c.Email, c => c.Email);

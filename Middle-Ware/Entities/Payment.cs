@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MongoDB.Bson.IO;
+using MongoDB.Bson;
 
 namespace Entities
 {
-   public  enum PaymentType
+   
+    public  enum PaymentType
     {
         Card=1,EFT,Crypto
     }
     public class Payment
     {
+
+        public ObjectId Id { get; set; }
         private string scheduleNr;
 
         public string ScheduleNr
@@ -32,9 +37,9 @@ namespace Entities
             set { beneficiaryID = value; }
         }
 
-        private DateTime payDate;
+        private string payDate;
 
-        public DateTime PayDate
+        public string PayDate
         {
             get { return payDate; }
             set { payDate = value; }
@@ -84,9 +89,9 @@ namespace Entities
             get { return recurring; }
             set { recurring = value; }
         }
-        private DateTime dateCreated;
+        private string dateCreated;
 
-        public DateTime DateCreated
+        public string DateCreated
         {
             get { return dateCreated; }
             set { dateCreated = value; }
