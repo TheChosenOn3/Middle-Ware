@@ -48,8 +48,20 @@ namespace Middle_Ware.Controllers
         }
 
         // PUT: api/User/5
-        public void Put(int id, [FromBody]string value)
+        public HttpResponseMessage Put( [FromBody]User userObj)
         {
+            if (userObj.Email !=null)
+            {
+                DatabaseHandler<User>.UpdateDocument(userObj, c => c.Email, c => c.Email);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+           
+           
+
         }
 
         // DELETE: api/User/5

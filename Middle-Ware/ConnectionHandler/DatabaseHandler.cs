@@ -4,6 +4,7 @@ using System.Text;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace ConnectionHandler
 {
@@ -74,8 +75,45 @@ namespace ConnectionHandler
             col.InsertOne(obj);
         }
 
+        public static void UpdateDocument(T obj, Expression<Func<T, object>> PrimaryKey, Func<T, object> PrimaryKeyVal)
+        {
+            var fields = obj.GetType().GetProperties().Select(f => f.Name).ToList();
+            Dictionary<string, string> fieldVal = new Dictionary<string, string>();
 
-       
+            foreach (string item in fields.Where(c => c.ToString() != "Id"))
+            {
+                var valueOfField = obj.GetType().GetProperty(item).GetValue(obj);
+                if (valueOfField != null) fieldVal.Add(item, valueOfField.ToString());
+
+            }
+            MongoClient client = new MongoClient();
+            IMongoDatabase db = client.GetDatabase(DatabaseName);
+            string collectionName = Convert.ToString(obj.GetType());
+            int indexCounter = collectionName.IndexOf('.');
+            string ClassValue = "tbl" + collectionName.Substring(indexCounter + 1, collectionName.Length - indexCounter - 1);
+            var col = db.GetCollection<T>(ClassValue);
+            var Primarybuilder = Builders<T>.Filter;
+            ///
+            var FieldName = (PrimaryKey.Body as MemberExpression).Member.Name;
+            var PrimeKeyValue = PrimaryKeyVal(obj);
+            var query1 = Primarybuilder.Eq(FieldName, PrimeKeyValue);
+            UpdateDefinition<T> query = null;
+            var UpdateBuilder = Builders<T>.Update;
+            int counter = 1;
+
+            foreach (KeyValuePair<string, string> item in fieldVal)
+            {
+                query = (counter == 1) ? UpdateBuilder.Set(item.Key, item.Value) : query.Set(item.Key, item.Value);
+                counter++;
+            }
+
+            col.FindOneAndUpdate<T>(query1, query);
+        }
+
+
+
+
+
 
     }
 }
