@@ -14,10 +14,7 @@ namespace Middle_Ware.Controllers
     public class UserController : ApiController
     {
         // GET: api/User
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+    
 
         // GET: api/User/5
         [Route("api/User/{user}/{pass}")]
@@ -41,8 +38,15 @@ namespace Middle_Ware.Controllers
         // POST: api/User
         public HttpResponseMessage Post([FromBody]User user)
         {
-            DatabaseHandler<User>.insertData(user);
+            try
+            {
+                DatabaseHandler<User>.insertData(user);
 
+            }
+            catch (Exception)
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
             return new HttpResponseMessage(HttpStatusCode.OK);
 
         }

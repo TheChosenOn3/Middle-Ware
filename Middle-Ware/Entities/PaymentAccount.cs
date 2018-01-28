@@ -39,6 +39,22 @@ namespace Entities
             get { return typeAcc; }
             set { typeAcc = value; }
         }
+        private string userID;
+
+        public string UserID
+        {
+            get { return userID; }
+            set { userID = value; }
+        }
+        private string beneficiaryID;
+
+        public string BeneficiaryID
+        {
+            get { return beneficiaryID; }
+            set { beneficiaryID = value; }
+        }
+
+
 
 
 
