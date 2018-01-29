@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,7 @@ namespace Entities
 {
     public class Card
     {
+        public ObjectId Id { get; set; }
         private string cardNr;
 
         public string CardNr
@@ -13,12 +15,12 @@ namespace Entities
             get { return cardNr; }
             set { cardNr = value; }
         }
-        private string accountHolder;
+        private string cardHaolder;
 
-        public string AccountHolder
+        public string CardHolder
         {
-            get { return accountHolder; }
-            set { accountHolder = value; }
+            get { return cardHaolder; }
+            set { cardHaolder = value; }
         }
 
         private string cvv;
@@ -29,8 +31,8 @@ namespace Entities
             set { cvv = value; }
         }
 
-        private DateTime expiry;
-        public DateTime Expiry
+        private string expiry;
+        public string Expiry
         {
             get { return expiry; }
             set { expiry = value; }

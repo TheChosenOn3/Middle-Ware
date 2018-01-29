@@ -56,15 +56,17 @@ namespace Middle_Ware.Controllers
         }
 
         // PUT api/<controller>/5
-        public HttpResponseMessage Put(int id, [FromBody]PaymentAccount pay)
+        public HttpResponseMessage Put( [FromBody]PaymentAccount pay)
         {
             if (pay.BeneficiaryID != null&&pay.UserID==null)
             {
-                DatabaseHandler<PaymentAccount>.UpdateDocument(pay, c => c.BeneficiaryID, c => c.BeneficiaryID);
+                DBFilterClass<PaymentAccount> pa = new DBFilterClass<PaymentAccount> {Field=c=>c.BeneficiaryID,FieldValues= c => c.BeneficiaryID,condition=FilterCondition.equals};
+                DatabaseHandler<PaymentAccount>.UpdateDocument(pay, pa);
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }else if (pay.BeneficiaryID == null && pay.UserID != null)
             {
-                DatabaseHandler<PaymentAccount>.UpdateDocument(pay, c => c.UserID, c => c.UserID);
+                DBFilterClass<PaymentAccount> pa = new DBFilterClass<PaymentAccount> { Field = c => c.UserID, FieldValues = c => c.UserID, condition = FilterCondition.equals };
+                DatabaseHandler<PaymentAccount>.UpdateDocument(pay,pa);
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else

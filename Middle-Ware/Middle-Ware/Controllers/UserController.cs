@@ -56,7 +56,7 @@ namespace Middle_Ware.Controllers
         {
             if (userObj.Email !=null)
             {
-                DatabaseHandler<User>.UpdateDocument(userObj, c => c.Email, c => c.Email);
+                DatabaseHandler<User>.UpdateDocument(userObj, new DBFilterClass<User> { Field = c => c.Email, FieldValues = c => c.Email, condition = FilterCondition.equals });//email
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else

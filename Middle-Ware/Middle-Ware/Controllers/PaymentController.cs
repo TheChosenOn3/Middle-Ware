@@ -15,18 +15,15 @@ namespace Middle_Ware.Controllers
     {
        
         [HttpGet]
+        [Route("api/Payment/{userID}/")]
         public IEnumerable<Payment> Get(string userID)
         {
-            Payment pay = new Payment{UserID=userID};
+            Payment pay = new Payment{RsaID=userID};
             List<Payment> payList = new List<Payment>();
             Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>> Filters = new Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>>();
-            Filters.Add(c => c.UserID, c => c.UserID);
+            Filters.Add(c => c.RsaID, c => c.RsaID);
             payList= DatabaseHandler<Payment>.getDocumentContent(pay, Filters);
-            if (payList.Count == 1)
-            {
-                return payList;
-
-            }
+           
             return payList;
         }
 
@@ -55,21 +52,52 @@ namespace Middle_Ware.Controllers
         private static void checkPayments()
         {
             string currentDate = DateTime.Now.ToString("dd/MM/yyyy");
-            Payment pay = new Payment { PayDate = currentDate };
+            Payment pay = new Payment { PayDate = currentDate,Status="Pending" };//change status
             
             Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>> filters = new Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>>();  
             List<Payment> payList = new List<Payment>();
             filters.Add(c => c.PayDate, c => c.PayDate);
+            filters.Add(c=>c.Status, c => c.Status);
             
             while (true)
             {
                 payList = DatabaseHandler<Payment>.getDocumentContent(pay, filters);
                 foreach (Payment item in payList)
                 {
-                    Payment processedPayment = makePayment(item);
+                    Payment processedPayment = makePayment(item);//Checks if payment is successfull or failed
+                    if (processedPayment.Recurring==true&&processedPayment.Recurring)
+                    {
+
+                        
+                        string[] intervalBuffer = processedPayment.Interval.Split('/');
+                        string OriginalDate = processedPayment.PayDate;
+                        int dayInt = Convert.ToInt16(intervalBuffer[0]);
+                        
+                        int monthInt = Convert.ToInt16(intervalBuffer[1]);
+                        DateTime payDate = DateTime.ParseExact(processedPayment.PayDate, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);//Convert Date format to correct 
+                       payDate= payDate.AddDays(dayInt);
+                        payDate = payDate.AddMonths(monthInt);//gets the new Pay date
+                        processedPayment.PayDate = payDate.ToString("dd/MM/yyyy");
+                        processedPayment.Status = "Pending";
+                        DatabaseHandler<Payment>.UpdateDocument(processedPayment, new DBFilterClass<Payment>
+                        {
+                            Field = c => c.ScheduleNr,
+                            FieldValues = c => c.ScheduleNr,
+                            condition = FilterCondition.equals
+                        });
+                        processedPayment.Status = "Accepted";
+                        processedPayment.PayDate = OriginalDate;
+                        processedPayment.Description = "";
+                        //Update curent document's pay date 
+                    }
+                    else
+                    {
+                        //Execute delete statement to delete * non recuring payments 
+                    }
+                    History historyToInsert = new History {Amount=processedPayment.Amount,PayDate = processedPayment.PayDate,BeneficairyID= processedPayment.BeneficairyID,DateCreated= processedPayment.DateCreated,Description= processedPayment.Description,Interval= processedPayment.Interval,PaymentNumber= processedPayment.PaymentNumber,Recurring= processedPayment.Recurring,ScheduleNr= processedPayment.ScheduleNr,Status= processedPayment.Status,TypePayment= processedPayment.TypePayment,UserID= processedPayment.RsaID };
+                    DatabaseHandler<History>.insertData(historyToInsert);
+                    //make a insert statement to history table
                    
-                    DatabaseHandler<Payment>.UpdateDocument(item, c => c.ScheduleNr, c => c.ScheduleNr);
-                    
                 }
                 
                 Thread.Sleep(30000);//sleep timer of thread

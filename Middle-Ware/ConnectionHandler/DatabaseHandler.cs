@@ -75,7 +75,7 @@ namespace ConnectionHandler
             col.InsertOne(obj);
         }
 
-        public static void UpdateDocument(T obj, Expression<Func<T, object>> PrimaryKey, Func<T, object> PrimaryKeyVal)
+        public static void UpdateDocument(T obj, List<DBFilterClass<T>>filterList)
         {
             var fields = obj.GetType().GetProperties().Select(f => f.Name).ToList();
             Dictionary<string, string> fieldVal = new Dictionary<string, string>();
@@ -94,12 +94,28 @@ namespace ConnectionHandler
             var col = db.GetCollection<T>(ClassValue);
             var Primarybuilder = Builders<T>.Filter;
             ///
-            var FieldName = (PrimaryKey.Body as MemberExpression).Member.Name;
-            var PrimeKeyValue = PrimaryKeyVal(obj);
-            var query1 = Primarybuilder.Eq(FieldName, PrimeKeyValue);
+            int counter = 0;
+            FilterDefinition<T> query1=null;
+            foreach (DBFilterClass<T> item in filterList)
+            {
+                var FieldName = (item.Field.Body as MemberExpression).Member.Name;
+                var PrimeKeyValue = item.FieldValues(obj);
+                if (counter == 0)
+                {
+                    query1 = (item.condition == FilterCondition.equals) ? Primarybuilder.Eq(FieldName, PrimeKeyValue) :  Primarybuilder.Ne(FieldName, PrimeKeyValue);//;
+                    counter++;
+                }
+                else {
+                    query1 =  (item.condition == FilterCondition.equals) ? query1 & Primarybuilder.Eq(FieldName, PrimeKeyValue) : query1 & Primarybuilder.Ne(FieldName, PrimeKeyValue);//;
+                }
+            }
+           
+           
+
+            //////
             UpdateDefinition<T> query = null;
             var UpdateBuilder = Builders<T>.Update;
-            int counter = 1;
+             counter = 1;
 
             foreach (KeyValuePair<string, string> item in fieldVal)
             {
@@ -110,6 +126,53 @@ namespace ConnectionHandler
             col.FindOneAndUpdate<T>(query1, query);
         }
 
+        public static void UpdateDocument(T obj, DBFilterClass<T> filterList)
+        {
+            var fields = obj.GetType().GetProperties().Select(f => f.Name).ToList();
+            Dictionary<string, string> fieldVal = new Dictionary<string, string>();
+
+            foreach (string item in fields.Where(c => c.ToString() != "Id"))
+            {
+                var valueOfField = obj.GetType().GetProperty(item).GetValue(obj);
+                if (valueOfField != null) fieldVal.Add(item, valueOfField.ToString());
+
+            }
+            MongoClient client = new MongoClient();
+            IMongoDatabase db = client.GetDatabase(DatabaseName);
+            string collectionName = Convert.ToString(obj.GetType());
+            int indexCounter = collectionName.IndexOf('.');
+            string ClassValue = "tbl" + collectionName.Substring(indexCounter + 1, collectionName.Length - indexCounter - 1);
+            var col = db.GetCollection<T>(ClassValue);
+            var Primarybuilder = Builders<T>.Filter;
+            ///
+            int counter = 0;
+            FilterDefinition<T> query1 = null;
+           var FieldName = (filterList.Field.Body as MemberExpression).Member.Name;
+           var PrimeKeyValue = filterList.FieldValues(obj);
+                    counter++;
+                query1 = (filterList.condition == FilterCondition.equals) ? Primarybuilder.Eq(FieldName, PrimeKeyValue) :  Primarybuilder.Ne(FieldName, PrimeKeyValue);//;
+            
+
+
+
+            //////
+            UpdateDefinition<T> query = null;
+            var UpdateBuilder = Builders<T>.Update;
+            counter = 1;
+
+            foreach (KeyValuePair<string, string> item in fieldVal)
+            {
+                query = (counter == 1) ? UpdateBuilder.Set(item.Key, item.Value) : query.Set(item.Key, item.Value);
+                counter++;
+            }
+
+            col.FindOneAndUpdate<T>(query1, query);
+        }
+
+        public static void DeleteData(T obj)
+        {
+           
+        }
 
 
 

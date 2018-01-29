@@ -49,7 +49,7 @@ namespace Middle_Ware.Controllers
         {
             if (ben.BeneficairyID != null)
             {
-                DatabaseHandler<Beneficiary>.UpdateDocument(ben, c => c.BeneficairyID, c => c.BeneficairyID);
+                DatabaseHandler<Beneficiary>.UpdateDocument(ben, new DBFilterClass<Beneficiary> {Field=c=>c.BeneficairyID,FieldValues= c => c.BeneficairyID,condition=FilterCondition.equals });
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else

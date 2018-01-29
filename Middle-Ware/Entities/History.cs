@@ -1,19 +1,12 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using MongoDB.Bson.IO;
-using MongoDB.Bson;
 
 namespace Entities
 {
-   
-    public  enum PaymentType
+    public class History
     {
-        Card=1,EFT,Crypto
-    }
-    public class Payment
-    {
-
         public ObjectId Id { get; set; }
         private string scheduleNr;
 
@@ -96,17 +89,13 @@ namespace Entities
             get { return dateCreated; }
             set { dateCreated = value; }
         }
-        private string rsaID;
+        private string userID;
 
-        public string RsaID
+        public string UserID
         {
-            get { return rsaID; }
-            set { rsaID = value; }
+            get { return userID; }
+            set { userID = value; }
         }
-        
-
-
-
 
 
 
