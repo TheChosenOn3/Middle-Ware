@@ -10,14 +10,14 @@ namespace Entities
         public ObjectId Id { get; set; }
         private string beneficiaryID;
 
-        public string BeneficiaryID
+        public string BeneficairyID
         {
             get { return beneficiaryID; }
             set { beneficiaryID = value; }
         }
         private string beneficiaryName;
 
-        public string BeneficiaryName
+        public string BeneficairyName
         {
             get { return beneficiaryName; }
             set { beneficiaryName = value; }
