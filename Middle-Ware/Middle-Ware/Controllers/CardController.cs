@@ -26,5 +26,42 @@ namespace Middle_Ware.Controllers
 
         }
 
+        public HttpResponseMessage Post([FromBody]Card user)
+        {
+            try
+            {
+                DatabaseHandler<Card>.insertData(user);
+
+            }
+            catch (Exception)
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+            return new HttpResponseMessage(HttpStatusCode.OK);
+
+        }
+
+        public HttpResponseMessage Put([FromBody]Card user_card)
+        {
+            if (user_card.CardNr != null)
+            {
+                DatabaseHandler<Card>.UpdateDocument(user_card, new DBFilterClass<Card> { Field = c => c.CardNr, FieldValues = c => c.CardNr, condition = FilterCondition.equals });//email
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+
+
+
+        }
+        [HttpDelete]
+        public void Delete(string id)
+        {
+            Card crd = new Card { CardNr=id};
+            DatabaseHandler<Card>.DeleteRow(crd, c => c.CardNr, c => c.CardNr);
+        }
+
     }
 }

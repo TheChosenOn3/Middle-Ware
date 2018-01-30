@@ -170,11 +170,21 @@ namespace ConnectionHandler
             col.FindOneAndUpdate<T>(query1, query);
         }
 
-        public static void DeleteData(T obj)
+        public static void DeleteRow(T obj, Expression<Func<T, object>> PrimaryKey, Func<T, object> PrimaryKeyVal)
         {
-           
-        }
+            MongoClient client = new MongoClient();
+            IMongoDatabase db = client.GetDatabase(DatabaseName);
+            string collectionName = Convert.ToString(obj.GetType());
+            int indexCounter = collectionName.IndexOf('.');
+            string ClassValue = "tbl" + collectionName.Substring(indexCounter + 1, collectionName.Length - indexCounter - 1);
+            var col = db.GetCollection<T>(ClassValue);
+            var propertyValue = PrimaryKeyVal(obj);
+            var builder = Builders<T>.Filter;
+            var field = (PrimaryKey.Body as MemberExpression).Member.Name;
+            var query = builder.Eq(field, propertyValue);
+            col.FindOneAndDelete(query);
 
+        }
 
 
 

@@ -92,6 +92,7 @@ namespace Middle_Ware.Controllers
                     }
                     else
                     {
+                        DatabaseHandler<Payment>.DeleteRow(processedPayment,c=>c.ScheduleNr, c => c.ScheduleNr);
                         //Execute delete statement to delete * non recuring payments 
                     }
                     History historyToInsert = new History {Amount=processedPayment.Amount,PayDate = processedPayment.PayDate,BeneficairyID= processedPayment.BeneficairyID,DateCreated= processedPayment.DateCreated,Description= processedPayment.Description,Interval= processedPayment.Interval,PaymentNumber= processedPayment.PaymentNumber,Recurring= processedPayment.Recurring,ScheduleNr= processedPayment.ScheduleNr,Status= processedPayment.Status,TypePayment= processedPayment.TypePayment,UserID= processedPayment.UserID };

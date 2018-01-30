@@ -203,6 +203,7 @@
     <Compile Include="Controllers\BeneficiaryController.cs" />
     <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\ConnectionController.cs" />
+    <Compile Include="Controllers\CryptoController.cs" />
     <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
