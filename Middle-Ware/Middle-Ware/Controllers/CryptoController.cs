@@ -18,19 +18,23 @@ namespace Middle_Ware.Controllers
         {
             if (type == userType.Client)
             {
-                Crypto pa = new Crypto { UserID = userID };
+                Crypto pa = new Crypto { UserId= userID };
                 Dictionary<Expression<Func<Crypto, object>>, Func<Crypto, object>> Filters = new Dictionary<Expression<Func<Crypto, object>>, Func<Crypto, object>>();
-                Filters.Add(c => c.UserID, c => c.UserID);
+                Filters.Add(c => c.UserId, c => c.UserId);
                 List<Crypto> us = DatabaseHandler<Crypto>.getDocumentContent(pa, Filters);
-                return us;
+                
+                    return us;
+           
             }
             else
             {
-                Crypto pa = new Crypto { BeneficiaryID = userID };
+                Crypto pa = new Crypto { BeneficiaryId = userID };
                 Dictionary<Expression<Func<Crypto, object>>, Func<Crypto, object>> Filters = new Dictionary<Expression<Func<Crypto, object>>, Func<Crypto, object>>();
-                Filters.Add(c => c.BeneficiaryID, c => c.BeneficiaryID);
+                Filters.Add(c => c.BeneficiaryId, c => c.BeneficiaryId);
                 List<Crypto> us = DatabaseHandler<Crypto>.getDocumentContent(pa, Filters);
                 return us;
+               
+               
             }
 
         }

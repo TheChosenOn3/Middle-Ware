@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,30 +7,31 @@ namespace Entities
 {
     public class Crypto
     {
-        private string walletName;
+        public ObjectId Id { get; set; }
+        private string waletName;
 
-        public string WalletName
+        public string WaletName
         {
-            get { return walletName; }
-            set { walletName = value; }
+            get { return waletName; }
+            set { waletName = value; }
         }
-        private string walletaddress;
+        private string waletaddress;
 
-        public string WalletAddress
+        public string Waletaddress
         {
-            get { return walletaddress; }
-            set { walletaddress = value; }
+            get { return waletaddress; }
+            set { waletaddress = value; }
         }
         private string userID;
 
-        public string UserID
+        public string UserId
         {
             get { return userID; }
             set { userID = value; }
         }
         private string beneficiaryID;
 
-        public string BeneficiaryID
+        public string BeneficiaryId
         {
             get { return beneficiaryID; }
             set { beneficiaryID = value; }

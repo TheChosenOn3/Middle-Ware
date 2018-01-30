@@ -5,6 +5,8 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using System.Linq;
+using MongoDB.Driver.Core.Events;
+using System.IO;
 
 namespace ConnectionHandler
 {
@@ -19,6 +21,31 @@ namespace ConnectionHandler
         /// </summary>
         /// <param name="Obj"></param>
         /// <returns></returns>
+        /// 
+        //public static MongoClient StartLogger()
+        //{
+        //new MongoClientSettings()
+        //{
+        //    Server = new MongoServerAddress("localhost"),
+        //        ClusterConfigurator = cb =>
+        //        {
+        //            cb.Subscribe<CommandStartedEvent>(e =>
+        //            {
+        //                using (StreamWriter file = new StreamWriter(@"C:\Logs\MongoLog.txt", true))
+        //                {
+        //                    if (!(e.CommandName == "buildInfo" || e.CommandName == "isMaster"))
+        //                    {
+        //                        file.WriteLine(DateTime.Now + "\t" + $"{e.CommandName} - {e.Command.ToJson()}");
+        //                        file.Close();
+        //                    }
+        //                }
+        //            });
+        //        }
+        //    });
+        //    return client;
+        //}
+
+
         public static List<T> getDocumentContent(T Obj)
         {
             client = new MongoClient();
@@ -42,7 +69,7 @@ namespace ConnectionHandler
         /// Expression<Func<T, object>> property, Func<T, object> func
         public static List<T> getDocumentContent(T obj, Dictionary<Expression<Func<T, object>>, Func<T, object>> Filters)
         {
-            MongoClient client = new MongoClient();
+            client = new MongoClient();
             IMongoDatabase db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(obj.GetType());
             int indexCounter = collectionName.IndexOf('.');
