@@ -37,6 +37,14 @@ namespace Entities
             get { return expiry; }
             set { expiry = value; }
         }
+        private string userID;
+
+        public string UserID
+        {
+            get { return userID; }
+            set { userID = value; }
+        }
+
 
 
 

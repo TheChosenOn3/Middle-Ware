@@ -31,7 +31,7 @@ namespace Entities
         }
         private string beneficiaryID;
 
-        public string BeneficairyID
+        public string BeneficiaryID
         {
             get { return beneficiaryID; }
             set { beneficiaryID = value; }

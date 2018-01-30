@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,9 +7,10 @@ namespace Entities
 {
    public class Beneficiary
     {
+        public ObjectId Id { get; set; }
         private string beneficiaryID;
 
-        public string BeneficairyID
+        public string BeneficiaryID
         {
             get { return beneficiaryID; }
             set { beneficiaryID = value; }
@@ -27,15 +29,15 @@ namespace Entities
             get { return beneficiaryBranch; }
             set { beneficiaryBranch = value; }
         }
-        private int myVar;
+        private string userID;
 
-        public int MyProperty
+        public string UserId
         {
-            get { return myVar; }
-            set { myVar = value; }
+            get { return userID; }
+            set { userID = value; }
         }
 
-      
+
 
 
 
