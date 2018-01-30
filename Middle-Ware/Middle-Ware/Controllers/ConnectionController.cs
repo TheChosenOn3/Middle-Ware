@@ -10,10 +10,11 @@ namespace Middle_Ware.Controllers
     public class ConnectionController : ApiController
     {
         // GET api/<controller>
+        public bool Maintenance = false;
         public bool Get()
         {
 
-            return true;
+            return Maintenance;
         }
     }
 }
