@@ -45,9 +45,9 @@ namespace Middle_Ware.Controllers
         // PUT api/<controller>/5
         public HttpResponseMessage Put(int id, [FromBody]Beneficiary ben)
         {
-            if (ben.BeneficiaryID != null)
+            if (ben.BeneficairyID != null)
             {
-                DatabaseHandler<Beneficiary>.UpdateDocument(ben, new DBFilterClass<Beneficiary> {Field=c=>c.BeneficiaryID, FieldValues= c => c.BeneficiaryID, condition=FilterCondition.equals });
+                DatabaseHandler<Beneficiary>.UpdateDocument(ben, new DBFilterClass<Beneficiary> {Field=c=>c.BeneficairyID, FieldValues= c => c.BeneficairyID, condition=FilterCondition.equals });
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else

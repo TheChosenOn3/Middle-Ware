@@ -56,6 +56,7 @@ namespace ConnectionHandler
                 var propertyValue = item.Value(obj);
 
                 var field = (item.Key.Body as MemberExpression).Member.Name;
+                
                 query = (counter == 0) ? builder.Eq(field, propertyValue):query & builder.Eq(field, propertyValue);
                 counter++;
             }

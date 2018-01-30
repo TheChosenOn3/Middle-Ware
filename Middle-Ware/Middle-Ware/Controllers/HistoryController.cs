@@ -21,7 +21,7 @@ namespace Middle_Ware.Controllers
             List<History> payList = new List<History>();
             Dictionary<Expression<Func<History, object>>, Func<History, object>> Filters = new Dictionary<Expression<Func<History, object>>, Func<History, object>>();
             Filters.Add(c => c.UserID, c => c.UserID);
-            payList = DatabaseHandler<History>.getDocumentContent(pay, Filters);
+            payList = DatabaseHandler<History>.getDocumentContent(pay,Filters);
 
             return payList;
         }

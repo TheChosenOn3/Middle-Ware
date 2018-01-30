@@ -29,12 +29,12 @@ namespace Entities
             get { return description; }
             set { description = value; }
         }
-        private string beneficiaryID;
+        private string beneficairyID;
 
-        public string BeneficiaryID
+        public string BeneficairyID
         {
-            get { return beneficiaryID; }
-            set { beneficiaryID = value; }
+            get { return beneficairyID; }
+            set { beneficairyID = value; }
         }
 
         private string payDate;
@@ -96,12 +96,12 @@ namespace Entities
             get { return dateCreated; }
             set { dateCreated = value; }
         }
-        private string rsaID;
+        private string userID;
 
-        public string RsaID
+        public string UserID
         {
-            get { return rsaID; }
-            set { rsaID = value; }
+            get { return userID; }
+            set { userID = value; }
         }
         
 

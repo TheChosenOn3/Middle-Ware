@@ -18,10 +18,10 @@ namespace Middle_Ware.Controllers
         [Route("api/Payment/{userID}/")]
         public IEnumerable<Payment> Get(string userID)
         {
-            Payment pay = new Payment{RsaID=userID};
+            Payment pay = new Payment{ UserID = userID};
             List<Payment> payList = new List<Payment>();
             Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>> Filters = new Dictionary<Expression<Func<Payment, object>>, Func<Payment, object>>();
-            Filters.Add(c => c.RsaID, c => c.RsaID);
+            Filters.Add(c => c.UserID, c => c.UserID);
             payList= DatabaseHandler<Payment>.getDocumentContent(pay, Filters);
            
             return payList;
@@ -94,7 +94,7 @@ namespace Middle_Ware.Controllers
                     {
                         //Execute delete statement to delete * non recuring payments 
                     }
-                    History historyToInsert = new History {Amount=processedPayment.Amount,PayDate = processedPayment.PayDate,BeneficairyID= processedPayment.BeneficiaryID,DateCreated= processedPayment.DateCreated,Description= processedPayment.Description,Interval= processedPayment.Interval,PaymentNumber= processedPayment.PaymentNumber,Recurring= processedPayment.Recurring,ScheduleNr= processedPayment.ScheduleNr,Status= processedPayment.Status,TypePayment= processedPayment.TypePayment,UserID= processedPayment.RsaID };
+                    History historyToInsert = new History {Amount=processedPayment.Amount,PayDate = processedPayment.PayDate,BeneficairyID= processedPayment.BeneficairyID,DateCreated= processedPayment.DateCreated,Description= processedPayment.Description,Interval= processedPayment.Interval,PaymentNumber= processedPayment.PaymentNumber,Recurring= processedPayment.Recurring,ScheduleNr= processedPayment.ScheduleNr,Status= processedPayment.Status,TypePayment= processedPayment.TypePayment,UserID= processedPayment.UserID };
                     DatabaseHandler<History>.insertData(historyToInsert);
                     //make a insert statement to history table
                    
