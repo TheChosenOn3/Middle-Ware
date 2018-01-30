@@ -13,18 +13,16 @@ namespace Middle_Ware.Controllers
     public class BeneficiaryController : ApiController
     {
         // GET api/<controller>
-        public Beneficiary Get(string benID)
+        [Route("api/Beneficiary/{userID}/")]
+        [HttpGet]
+        public List<Beneficiary> Get(string userID)
         {
-            Beneficiary toPass = new Entities.Beneficiary {BeneficairyID=benID };
+            Beneficiary toPass = new Entities.Beneficiary {UserId= userID };
             Dictionary<Expression<Func<Beneficiary, object>>, Func<Beneficiary, object>> Filters = new Dictionary<Expression<Func<Beneficiary, object>>, Func<Beneficiary, object>>();
-            Filters.Add(c => c.BeneficairyID, c => c.BeneficairyID);
+            Filters.Add(c => c.UserId, c => c.UserId);
             List<Beneficiary> us = DatabaseHandler<Beneficiary>.getDocumentContent(toPass, Filters);
-            if (us.Count == 1)
-            {
-                return us[0];
 
-            }
-            return new Beneficiary();
+            return us;
         }
 
         // GET api/<controller>/5
@@ -47,9 +45,9 @@ namespace Middle_Ware.Controllers
         // PUT api/<controller>/5
         public HttpResponseMessage Put(int id, [FromBody]Beneficiary ben)
         {
-            if (ben.BeneficairyID != null)
+            if (ben.BeneficiaryID != null)
             {
-                DatabaseHandler<Beneficiary>.UpdateDocument(ben, new DBFilterClass<Beneficiary> {Field=c=>c.BeneficairyID,FieldValues= c => c.BeneficairyID,condition=FilterCondition.equals });
+                DatabaseHandler<Beneficiary>.UpdateDocument(ben, new DBFilterClass<Beneficiary> {Field=c=>c.BeneficiaryID, FieldValues= c => c.BeneficiaryID, condition=FilterCondition.equals });
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else

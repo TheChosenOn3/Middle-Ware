@@ -17,7 +17,7 @@ namespace Entities
         }
         private string beneficiaryName;
 
-        public string BeneficairyName
+        public string BeneficiaryName
         {
             get { return beneficiaryName; }
             set { beneficiaryName = value; }
