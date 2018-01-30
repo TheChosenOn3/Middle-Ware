@@ -19,7 +19,7 @@ namespace Middle_Ware
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            PaymentController.paymentChecker(); //remove this
+         PaymentController.paymentChecker(); //remove this
         }
     }
 }

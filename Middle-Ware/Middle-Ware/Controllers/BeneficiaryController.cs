@@ -43,7 +43,8 @@ namespace Middle_Ware.Controllers
         }
 
         // PUT api/<controller>/5
-        public HttpResponseMessage Put(int id, [FromBody]Beneficiary ben)
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody]Beneficiary ben)
         {
             if (ben.BeneficairyID != null)
             {

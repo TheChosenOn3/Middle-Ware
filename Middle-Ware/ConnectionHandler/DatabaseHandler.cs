@@ -5,8 +5,6 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using System.Linq;
-using MongoDB.Driver.Core.Events;
-using System.IO;
 
 namespace ConnectionHandler
 {
@@ -22,28 +20,6 @@ namespace ConnectionHandler
         /// <param name="Obj"></param>
         /// <returns></returns>
         /// 
-        //public static MongoClient StartLogger()
-        //{
-        //new MongoClientSettings()
-        //{
-        //    Server = new MongoServerAddress("localhost"),
-        //        ClusterConfigurator = cb =>
-        //        {
-        //            cb.Subscribe<CommandStartedEvent>(e =>
-        //            {
-        //                using (StreamWriter file = new StreamWriter(@"C:\Logs\MongoLog.txt", true))
-        //                {
-        //                    if (!(e.CommandName == "buildInfo" || e.CommandName == "isMaster"))
-        //                    {
-        //                        file.WriteLine(DateTime.Now + "\t" + $"{e.CommandName} - {e.Command.ToJson()}");
-        //                        file.Close();
-        //                    }
-        //                }
-        //            });
-        //        }
-        //    });
-        //    return client;
-        //}
 
 
         public static List<T> getDocumentContent(T Obj)
@@ -69,7 +45,7 @@ namespace ConnectionHandler
         /// Expression<Func<T, object>> property, Func<T, object> func
         public static List<T> getDocumentContent(T obj, Dictionary<Expression<Func<T, object>>, Func<T, object>> Filters)
         {
-            client = new MongoClient();
+            MongoClient client = new MongoClient();
             IMongoDatabase db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(obj.GetType());
             int indexCounter = collectionName.IndexOf('.');
@@ -88,7 +64,7 @@ namespace ConnectionHandler
                 counter++;
             }
            
-            List<T> returnList = (List<T>)col.Find(query).ToListAsync().Result;
+            List<T> returnList = col.Find(query).ToListAsync().Result;
             return returnList;
         }
 

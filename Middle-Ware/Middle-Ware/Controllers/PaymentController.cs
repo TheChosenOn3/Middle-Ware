@@ -97,11 +97,17 @@ namespace Middle_Ware.Controllers
                     }
                     History historyToInsert = new History {Amount=processedPayment.Amount,PayDate = processedPayment.PayDate,BeneficairyID= processedPayment.BeneficairyID,DateCreated= processedPayment.DateCreated,Description= processedPayment.Description,Interval= processedPayment.Interval,PaymentNumber= processedPayment.PaymentNumber,Recurring= processedPayment.Recurring,ScheduleNr= processedPayment.ScheduleNr,Status= processedPayment.Status,TypePayment= processedPayment.TypePayment,UserID= processedPayment.UserID };
                     DatabaseHandler<History>.insertData(historyToInsert);
+                    processedPayment.Status = (processedPayment.TypePayment == PaymentType.Crypto) ? "Approved" :"Approved";//Change This
+                    string desc = "Payment with to Account : " + processedPayment.BeneficiaryAccount + " " + processedPayment.Status;
+                    Random rand = new Random();
+                    int someNum = rand.Next(10, 50000);
+                    Notification notify = new Notification { DateChange = DateTime.Now.ToString(), Description = desc, NotID = someNum.ToString(), UserID = processedPayment.UserID };
+                    DatabaseHandler<Notification>.insertData(notify);
                     //make a insert statement to history table
-                   
+
                 }
                 
-                Thread.Sleep(30000);//sleep timer of thread
+                Thread.Sleep(3000);//sleep timer of thread
 
 
             }
