@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace Entities
     }
     public class PaymentAccount
     {
+        public ObjectId Id { get; set; }
         private string accountNumber;
 
         public string AccountNumber

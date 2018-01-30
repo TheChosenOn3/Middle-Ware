@@ -17,6 +17,21 @@ namespace Middle_Ware.Controllers
     public class AccountController : ApiController
     {
         // GET api/<controller>.
+        [Route("api/Account/{userID}/")]
+        [HttpGet]
+        public IEnumerable<PaymentAccount> Get(string userID)//gets all the accounts and its details for a specific User or beneficiary
+        {
+            
+                PaymentAccount pa = new PaymentAccount { UserID = userID };
+                Dictionary<Expression<Func<PaymentAccount, object>>, Func<PaymentAccount, object>> Filters = new Dictionary<Expression<Func<PaymentAccount, object>>, Func<PaymentAccount, object>>();
+                Filters.Add(c => c.UserID, c => c.UserID);
+                List<PaymentAccount> us = DatabaseHandler<PaymentAccount>.getDocumentContent(pa, Filters);
+                return us;
+          
+        }
+
+        [Route("api/Account/{userID}/{type}")]
+        [HttpGet]
         public IEnumerable<PaymentAccount> Get(string userID, userType type)//gets all the accounts and its details for a specific User or beneficiary
         {
             if (type==userType.Client)

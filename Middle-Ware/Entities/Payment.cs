@@ -111,6 +111,14 @@ namespace Entities
             get { return beneficiaryID; }
             set { beneficiaryID = value; }
         }
+        private string beneficiaryAccount;
+
+        public string BeneficiaryAccount
+        {
+            get { return beneficiaryAccount; }
+            set { beneficiaryAccount = value; }
+        }
+
 
 
 
