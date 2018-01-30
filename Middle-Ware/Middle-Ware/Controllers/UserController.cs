@@ -35,6 +35,24 @@ namespace Middle_Ware.Controllers
             return new User();
         }
 
+        [Route("api/User/{user}/")]
+        [HttpGet]
+        public bool Get(string user)
+        {
+
+            User toPass = new Entities.User { Email = user };
+            Dictionary<Expression<Func<User, object>>, Func<User, object>> Filters = new Dictionary<Expression<Func<User, object>>, Func<User, object>>();
+            Filters.Add(c => c.Email, c => c.Email);
+            List<User> us = DatabaseHandler<User>.getDocumentContent(toPass, Filters);
+            if (us.Count == 1)
+            {
+                return true;
+
+            }
+            return false;
+        }
+
+
         // POST: api/User
         public HttpResponseMessage Post([FromBody]User user)
         {

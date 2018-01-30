@@ -103,7 +103,15 @@ namespace Entities
             get { return userID; }
             set { userID = value; }
         }
-        
+
+        private string beneficiaryID;
+
+        public string BeneficiaryID
+        {
+            get { return beneficiaryID; }
+            set { beneficiaryID = value; }
+        }
+
 
 
 
