@@ -97,7 +97,7 @@ namespace Middle_Ware.Controllers
                     }
                     History historyToInsert = new History {Amount=processedPayment.Amount,PayDate = processedPayment.PayDate,BeneficairyID= processedPayment.BeneficairyID,DateCreated= processedPayment.DateCreated,Description= processedPayment.Description,Interval= processedPayment.Interval,PaymentNumber= processedPayment.PaymentNumber,Recurring= processedPayment.Recurring,ScheduleNr= processedPayment.ScheduleNr,Status= processedPayment.Status,TypePayment= processedPayment.TypePayment,UserID= processedPayment.UserID };
                     DatabaseHandler<History>.insertData(historyToInsert);
-                    processedPayment.Status = (processedPayment.TypePayment == PaymentType.Crypto) ? "Approved" :"Approved";//Change This
+
                     string desc = "Payment with to Account : " + processedPayment.BeneficiaryAccount + " " + processedPayment.Status;
                     Random rand = new Random();
                     int someNum = rand.Next(10, 50000);
@@ -140,6 +140,27 @@ namespace Middle_Ware.Controllers
                     pay.Description = TraceResponse.status_message;
                     break;
                 case PaymentType.Crypto:
+                    Dictionary<Expression<Func<Crypto, object>>, Func<Crypto, object>> crypfilters = new Dictionary<Expression<Func<Crypto, object>>, Func<Crypto, object>>();
+                    crypfilters.Add(c => c.Waletaddress, c => c.Waletaddress);
+                    List<Crypto> crypList = DatabaseHandler<Crypto>.getDocumentContent(new Crypto {Waletaddress=pay.PaymentNumber }, crypfilters);
+                    //PayTraceRequest request = new PayTraceRequest { number = pay.PaymentNumber, amount = pay.Amount, holder = payAcc[0].AccountHolder };
+                    //PayTraceResponse TraceResponse = VendorController.MakePayment(request);
+                    //pay.Status = (TraceResponse.response_code == 101) ? "Approved" : "Declinded";
+                    //pay.Description = TraceResponse.status_message;
+                    ///addd code for crypto here
+                    Crypto ct = crypList[0];
+                    if (ct.Amount<pay.Amount)
+                    {
+                        pay.Description = "Failed InseficientFunds";
+                        pay.Status = "Failed";
+                    }
+                    else
+                    {
+                        ct.Amount -= pay.Amount;
+                    }
+                    DBFilterClass<Crypto> dbF = new DBFilterClass<Crypto> { Field=c=>c.Waletaddress,FieldValues = c => c.Waletaddress ,condition=FilterCondition.equals}; 
+                    DatabaseHandler<Crypto>.UpdateDocument(ct,dbF);
+                    
                     break;
                 default:
                     break;
