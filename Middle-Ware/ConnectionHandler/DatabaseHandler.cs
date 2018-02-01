@@ -69,6 +69,10 @@ namespace ConnectionHandler
             return returnList;
         }
 
+        /// <summary>
+        /// Inserts data to databse
+        /// </summary>
+        /// <param name="obj"></param>
         public static void insertData(T obj)
         {
             MongoClient client = Logger.StartLogger();//Method to start logging mongo queries
@@ -80,6 +84,11 @@ namespace ConnectionHandler
             col.InsertOne(obj);
         }
 
+        /// <summary>
+        /// Updates document with a range of values and exceptions and filters
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="filterList"></param>
         public static void UpdateDocument(T obj, List<DBFilterClass<T>>filterList)
         {
             var fields = obj.GetType().GetProperties().Select(f => f.Name).ToList();
@@ -174,6 +183,12 @@ namespace ConnectionHandler
             col.FindOneAndUpdate<T>(query1, query);
         }
 
+        /// <summary>
+        /// Deletes Row in collection
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="PrimaryKey"></param>
+        /// <param name="PrimaryKeyVal"></param>
         public static void DeleteRow(T obj, Expression<Func<T, object>> PrimaryKey, Func<T, object> PrimaryKeyVal)
         {
             MongoClient client = Logger.StartLogger();//Method to start logging mongo queries
