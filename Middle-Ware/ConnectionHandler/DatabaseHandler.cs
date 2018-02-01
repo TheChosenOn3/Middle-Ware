@@ -22,9 +22,10 @@ namespace ConnectionHandler
         /// 
 
 
+
         public static List<T> getDocumentContent(T Obj)
         {
-            client = new MongoClient();
+            client = Logger.StartLogger();//Method to start logging mongo queries
             db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(Obj.GetType());
             int indexCounter = collectionName.IndexOf('.');
@@ -45,7 +46,7 @@ namespace ConnectionHandler
         /// Expression<Func<T, object>> property, Func<T, object> func
         public static List<T> getDocumentContent(T obj, Dictionary<Expression<Func<T, object>>, Func<T, object>> Filters)
         {
-            MongoClient client = new MongoClient();
+            MongoClient client = Logger.StartLogger();//Method to start logging mongo queries
             IMongoDatabase db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(obj.GetType());
             int indexCounter = collectionName.IndexOf('.');
@@ -70,7 +71,7 @@ namespace ConnectionHandler
 
         public static void insertData(T obj)
         {
-            MongoClient client = new MongoClient();
+            MongoClient client = Logger.StartLogger();//Method to start logging mongo queries
             IMongoDatabase db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(obj.GetType());
             int indexCounter = collectionName.IndexOf('.');
@@ -90,7 +91,7 @@ namespace ConnectionHandler
                 if (valueOfField != null) fieldVal.Add(item, valueOfField.ToString());
 
             }
-            MongoClient client = new MongoClient();
+            MongoClient client = Logger.StartLogger();//Method to start logging mongo queries
             IMongoDatabase db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(obj.GetType());
             int indexCounter = collectionName.IndexOf('.');
@@ -141,7 +142,7 @@ namespace ConnectionHandler
                 if (valueOfField != null) fieldVal.Add(item, valueOfField.ToString());
 
             }
-            MongoClient client = new MongoClient();
+            MongoClient client = Logger.StartLogger();//Method to start logging mongo queries
             IMongoDatabase db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(obj.GetType());
             int indexCounter = collectionName.IndexOf('.');
@@ -175,7 +176,7 @@ namespace ConnectionHandler
 
         public static void DeleteRow(T obj, Expression<Func<T, object>> PrimaryKey, Func<T, object> PrimaryKeyVal)
         {
-            MongoClient client = new MongoClient();
+            MongoClient client = Logger.StartLogger();//Method to start logging mongo queries
             IMongoDatabase db = client.GetDatabase(DatabaseName);
             string collectionName = Convert.ToString(obj.GetType());
             int indexCounter = collectionName.IndexOf('.');

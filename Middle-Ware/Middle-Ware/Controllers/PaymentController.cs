@@ -71,6 +71,9 @@ namespace Middle_Ware.Controllers
                         
                         string[] intervalBuffer = processedPayment.Interval.Split('/');
                         string OriginalDate = processedPayment.PayDate;
+                        string originalStatus = processedPayment.Status;
+                        string originalDesc = processedPayment.Description;
+                        processedPayment.Description = "Recurring Payment";
                         int dayInt = Convert.ToInt16(intervalBuffer[0]);
                         
                         int monthInt = Convert.ToInt16(intervalBuffer[1]);
@@ -85,9 +88,10 @@ namespace Middle_Ware.Controllers
                             FieldValues = c => c.ScheduleNr,
                             condition = FilterCondition.equals
                         });
-                        processedPayment.Status = "Accepted";
+                        processedPayment.Status = originalStatus;
                         processedPayment.PayDate = OriginalDate;
-                        processedPayment.Description = "";
+                        processedPayment.Description = originalDesc;
+                       // processedPayment.Description = "";
                         //Update curent document's pay date 
                     }
                     else
@@ -107,12 +111,26 @@ namespace Middle_Ware.Controllers
 
                 }
                 
-                Thread.Sleep(3000);//sleep timer of thread
+                Thread.Sleep(300000);//sleep timer of thread
 
 
             }
             
         }
+
+        public HttpResponseMessage Put([FromBody]Payment ben)//Updates The scheduled Payment
+        {
+            if (ben.BeneficairyID != null)
+            {
+                DatabaseHandler<Payment>.UpdateDocument(ben, new DBFilterClass<Payment> { Field = c => c.ScheduleNr, FieldValues = c => c.ScheduleNr, condition = FilterCondition.equals });
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+        }
+
 
         private static Payment makePayment(Payment pay)//This is the method that communicates with the 3rd party API and that process our paymentszs
         {
@@ -124,7 +142,9 @@ namespace Middle_Ware.Controllers
                     Dictionary<Expression<Func<Card, object>>, Func<Card, object>> CardFilters = new Dictionary<Expression<Func<Card, object>>, Func<Card, object>>();
                     CardFilters.Add(c => c.CardNr, c => c.CardNr);
                     List<Card> payCard = DatabaseHandler<Card>.getDocumentContent(new Card { CardNr = pay.PaymentNumber }, CardFilters);
-                    VisaPaymentRequest Visarequest = new VisaPaymentRequest { cardNumber = pay.PaymentNumber, amount = pay.Amount,CVV= payCard[0].Cvv, cardExpirationMonth= payCard[0].Expiry.ToString() };
+                    string year = payCard[0].Expiry.Substring(0, 4);
+                    string month = payCard[0].Expiry.Substring(5, 2);
+                    VisaPaymentRequest Visarequest = new VisaPaymentRequest { cardNumber = pay.PaymentNumber, amount = pay.Amount,CVV= payCard[0].Cvv, cardExpirationMonth= month,cardExpirationYear=year };
                     VisaResponse cardResponse = VendorController.MakeCardPayment(Visarequest);
                     pay.Status = (cardResponse.ApprovalCode == "1") ?"Approved":"Declined";
                     pay.Description = cardResponse.Description;
@@ -134,7 +154,8 @@ namespace Middle_Ware.Controllers
                     Dictionary<Expression<Func<PaymentAccount, object>>, Func<PaymentAccount, object>> Filters = new Dictionary<Expression<Func<PaymentAccount, object>>, Func<PaymentAccount, object>>();
                     Filters.Add(c => c.AccountNumber, c => c.AccountNumber);
                     List<PaymentAccount> payAcc = DatabaseHandler<PaymentAccount>.getDocumentContent(new PaymentAccount { AccountNumber = pay.PaymentNumber }, Filters);
-                    PayTraceRequest request = new PayTraceRequest { number = pay.PaymentNumber, amount = pay.Amount ,holder=payAcc[0].AccountHolder};
+                    
+                    PayTraceRequest request = new PayTraceRequest { remitterAcc = pay.PaymentNumber, amount = pay.Amount ,remitterName=payAcc[0].AccountHolder,beneficiaryAcc=pay.BeneficiaryAccount,beneficiaryName=pay.BeneficairyID,beneficiarySortCode="569875",narration="",remitterSortCode="125469"};
                     PayTraceResponse TraceResponse = VendorController.MakePayment(request);
                     pay.Status = (TraceResponse.response_code == 101) ?"Approved":"Declinded";
                     pay.Description = TraceResponse.status_message;

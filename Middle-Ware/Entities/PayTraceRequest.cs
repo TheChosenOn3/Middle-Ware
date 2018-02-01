@@ -8,15 +8,18 @@ namespace Entities
     {
         public double amount { get; set; }
 
-        public string currency { get; set; }
+        public string remitterAcc { get; set; }
 
-        public string number { get; set; }
+        public string remitterSortCode { get; set; }
 
-        public string expiration_month { get; set; }
+        public string beneficiaryAcc { get; set; }
 
-        public string expiration_year { get; set; }
-        public string holder { get; set; }
+        public string beneficiarySortCode { get; set; }
 
-        public string csc { get; set; }
+        public string beneficiaryName { get; set; }
+
+        public string remitterName { get; set; }//Added account holder.
+
+        public string narration { get; set; }
     }
 }
